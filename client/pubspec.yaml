@@ -1,0 +1,15 @@
+name: timesheet_frontend
+description: A Flutter web frontend for the Timesheet app
+environment:
+  sdk: '>=2.18.0 <4.0.0'
+dependencies:
+  flutter:
+    sdk: flutter
+  http: ^0.13.5
+  websocket: ^2.0.1
+  provider: ^6.0.5
+  intl: ^0.18.0
+  pdf: ^3.10.1
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
