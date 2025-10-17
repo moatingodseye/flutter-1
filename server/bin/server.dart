@@ -19,7 +19,7 @@ void main(List<String> args) async {
   final ws = WSHub();
   final api = Api(database, ws);
 
-  final cascade = Cascade().add(api.router).add(ws.handler()).add(createStaticHandler(p.join(Directory.current.path, '..', 'frontend', 'build', 'web'), defaultDocument: 'index.html'));
+  final cascade = Cascade().add(api.router).add(ws.handler()).add(createStaticHandler(p.join(Directory.current.path, '..', 'client', 'build', 'web'), defaultDocument: 'index.html'));
   final handler = Pipeline().addMiddleware(logRequests()).addHandler(cascade.handler);
 
   final server = await io.serve(handler, InternetAddress.anyIPv4, port);
