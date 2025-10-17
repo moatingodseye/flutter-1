@@ -18,7 +18,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget build(BuildContext context) {
     final tabs = [TimesheetScreen(api: widget.apiClient, user: widget.user), ProjectsScreen(api: widget.apiClient), ReportsScreen(api: widget.apiClient)];
     return Scaffold(
-      appBar: AppBar(title: Text('Timesheet - \${widget.user['username']}')),
+//      appBar: AppBar(title: Text('Timesheet - \${widget.user['username']}')),
+      appBar: AppBar(title: Text('Timesheet - ${widget.user['username']}')),
       body: tabs[_index],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _index,

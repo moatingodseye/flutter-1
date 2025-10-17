@@ -46,7 +46,7 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
   void _delete(Map p) async {
     final ok = await showDialog(context: context, builder: (_) => AlertDialog(
       title: Text('Delete Project'),
-      content: Text('Delete project "\${p['name']}"? This cannot be undone.'),
+      content: Text('Delete project "${p['name']}"? This cannot be undone.'),
       actions: [TextButton(onPressed: ()=>Navigator.of(context).pop(false), child: Text('Cancel')), TextButton(onPressed: ()=>Navigator.of(context).pop(true), child: Text('Delete'))],
     ));
     if (ok == true) {
