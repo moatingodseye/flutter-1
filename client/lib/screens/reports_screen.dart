@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import '../services/api.dart';
 import 'package:pdf/widgets.dart' as pw;
-import 'package:pdf/pdf.dart';
-import 'dart:html' as html;
-import 'dart:typed_data';
-import 'dart:convert';
+//import 'package:pdf/pdf.dart';
+//import 'dart:html' as html;
+//import 'dart:typed_data';
+//import 'dart:convert';
+import 'package:web/web.dart' as web;
+import 'dart:js_interop';   // <<–– this import gives the toJS extension
+//import 'dart:typed_data';   // for Uint8List etc.
 
 class ReportsScreen extends StatefulWidget {
   final ApiClient api;
@@ -27,13 +30,13 @@ class _ReportsScreenState extends State<ReportsScreen> {
     setState(()=>data=r);
     setState(()=>_loading=false);
   }
-
+/*
   void _exportPdf() async {
     final doc = pw.Document();
     doc.addPage(pw.Page(build: (ctx) {
       return pw.Column(children: [
         pw.Text('Timesheet Report', style: pw.TextStyle(fontSize: 18)),
-        pw.Text('From \${start.toIso8601String().split('T')[0]} to \${end.toIso8601String().split('T')[0]}'),
+        pw.Text('From ${start.toIso8601String().split('T')[0]} to ${end.toIso8601String().split('T')[0]}'),
         pw.SizedBox(height: 12),
         pw.Table.fromTextArray(context: ctx, data: <List<String>>[
           <String>['Date','User ID','Project','Minutes','Notes'],
@@ -45,9 +48,57 @@ class _ReportsScreenState extends State<ReportsScreen> {
     final blob = html.Blob([bytes], 'application/pdf');
     final url = html.Url.createObjectUrlFromBlob(blob);
     final anchor = html.AnchorElement(href: url)
-      ..setAttribute('download', 'timesheet_report_\${start.toIso8601String().split('T')[0]}_to_\${end.toIso8601String().split('T')[0]}.pdf')
+      ..setAttribute('download', 'timesheet_report_${start.toIso8601String().split('T')[0]}_to_${end.toIso8601String().split('T')[0]}.pdf')
       ..click();
     html.Url.revokeObjectUrl(url);
+  }
+*/
+
+  void _exportPdf() async {
+    final doc = pw.Document();
+    doc.addPage(pw.Page(build: (ctx) {
+      return pw.Column(children: [
+        pw.Text('Timesheet Report', style: pw.TextStyle(fontSize: 18)),
+        pw.Text('From ${start.toIso8601String().split('T')[0]} to ${end.toIso8601String().split('T')[0]}'),
+        pw.SizedBox(height: 12),
+        pw.TableHelper.fromTextArray(
+          context: ctx,
+          data: <List<String>>[
+            <String>['Date','User ID','Project','Minutes','Notes'],
+            ...data.map((d) => [
+              d['date'].toString().split('T')[0],
+              d['user_id'].toString(),
+              d['project_name'] ?? d['project_id'].toString(),
+              d['minutes'].toString(),
+              (d['notes'] ?? '').toString()
+            ])
+          ],
+        ),
+      ]);
+    }));
+
+    final bytes = await doc.save();
+
+    // Convert Uint8List to JS-compatible data for web.Blob
+    final buffer = bytes.buffer; // this is a ByteBuffer
+    final jsData = buffer.toJS;   // convert to JSArrayBuffer via extension    
+//    final jsData = bytes.buffer.toJS;  // extension from package:web
+    final blob = web.Blob(
+      [jsData].toJS, 
+      web.BlobPropertyBag(type: 'application/pdf'),
+    );
+
+    final url = web.URL.createObjectURL(blob);
+
+    final anchor = web.HTMLAnchorElement()
+      ..href = url
+      ..download = 'timesheet_report_${start.toIso8601String().split('T')[0]}_to_${end.toIso8601String().split('T')[0]}.pdf';
+    // Some implementations append to document, click, then remove:
+    web.document.body?.append(anchor);
+    anchor.click();
+    anchor.remove();
+
+    web.URL.revokeObjectURL(url);
   }
 
   @override
