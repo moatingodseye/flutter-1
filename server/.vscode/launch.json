@@ -14,6 +14,9 @@
             "name": "server",
             "request": "launch",
             "type": "dart"
+        },
+        "env": {
+            "DB_PATH": ""
         }
     ]
 }
