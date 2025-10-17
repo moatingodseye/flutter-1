@@ -40,9 +40,17 @@ class Api {
       return Response.ok(jsonEncode({'ok': true}), headers: {'content-type':'application/json'});
     });
 
+//    router.get('/api/users', (Request req) async {
+//      final rows = db.db.select('SELECT id,username,enabled,created_at FROM users');
+//      return Response.ok(jsonEncode(rows.map((r)=>r.toJson()).toList()), headers: {'content-type':'application/json'});
+//    });
+
     router.get('/api/users', (Request req) async {
       final rows = db.db.select('SELECT id,username,enabled,created_at FROM users');
-      return Response.ok(jsonEncode(rows.map((r)=>r.toJson()).toList()), headers: {'content-type':'application/json'});
+      return Response.ok(
+        jsonEncode(rows.toList()),
+        headers: {'content-type': 'application/json'},
+      );
     });
 
     router.put('/api/users/<id|[0-9]+>', (Request req, String id) async {
@@ -77,7 +85,11 @@ class Api {
 
     router.get('/api/projects', (Request req) async {
       final rows = db.db.select('SELECT id,name,description,enabled,created_at FROM projects');
-      return Response.ok(jsonEncode(rows.map((r)=>r.toJson()).toList()), headers: {'content-type':'application/json'});
+//      return Response.ok(jsonEncode(rows.map((r)=>r.toJson()).toList()), headers: {'content-type':'application/json'});
+      return Response.ok(
+        jsonEncode(rows.toList()),
+        headers: {'content-type': 'application/json'},
+      );
     });
 
     router.put('/api/projects/<id|[0-9]+>', (Request req, String id) async {
@@ -122,7 +134,11 @@ class Api {
       if (end != null) { wheres.add('date(t.date) <= date(?)'); params.add(end); }
       if (wheres.isNotEmpty) sql += ' WHERE ' + wheres.join(' AND ');
       final rows = db.db.select(sql, params);
-      return Response.ok(jsonEncode(rows.map((r)=>r.toJson()).toList()), headers: {'content-type':'application/json'});
+//      return Response.ok(jsonEncode(rows.map((r)=>r.toJson()).toList()), headers: {'content-type':'application/json'});
+      return Response.ok(
+        jsonEncode(rows.toList()),
+        headers: {'content-type': 'application/json'},
+      );
     });
 
     router.put('/api/time_entries/<id|[0-9]+>', (Request req, String id) async {
