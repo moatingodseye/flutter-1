@@ -10,7 +10,15 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final _username = TextEditingController();
   final _password = TextEditingController();
-  final _client = ApiClient(baseUrl: Uri.base.origin);
+  final _dbUri = Uri(
+    scheme: Uri.base.scheme,
+    host: Uri.base.host,
+    port: 8080, // server is on port 8080
+//    path: Uri.base.path,
+//    query: Uri.base.query,
+//    fragment: null, // don't want the # at the end, that didn't work hence below
+  );//.replace(fragment: ''); 
+  late final _client = ApiClient(httpUrl: Uri.base.origin, dbUrl:_dbUri.toString());
   bool _loading = false;
   String? _error;
 
