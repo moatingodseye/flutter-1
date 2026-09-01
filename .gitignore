@@ -27,3 +27,9 @@ doc/api/
 
 .flutter-plugins
 .flutter-plugins-dependencies
+
+# Standing Claude docs. Internal infrastructure notes - never publish these.
+configuration.md
+rule.md
+OVERWATCH.md
+OVERWATCH.html
